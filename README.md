@@ -424,7 +424,7 @@ H   0.441  -0.143   0.0
 | `%NProcShared=N`   | Number of CPU cores to use                           |
 | `%Mem=sizeGB`      | Total memory allocation (e.g., 160GB)                |
 
-> 🔗 These must be first in the file.
+> ❗ These must be first in the file.
 
 ---
 
