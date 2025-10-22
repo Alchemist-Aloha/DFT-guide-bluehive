@@ -43,7 +43,6 @@
     - Vertical Gradient Method
     - Adiabatic Shift Method
 19. [Post-Processing Tools](#post-processing-tools)
-    - Converting .chk to .fchk
     - Extracting Raman Spectra
 20. [References and Resources](#references-and-resources)
 
