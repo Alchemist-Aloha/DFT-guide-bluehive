@@ -103,6 +103,7 @@
 
 **Second Theorem:**  
 - The true ground-state density is the one that **minimizes the energy functional**:
+
   $$
   E[\rho] = T[\rho] + V_{\text{ne}}[\rho] + J[\rho] + E_{\text{xc}}[\rho]
   $$
