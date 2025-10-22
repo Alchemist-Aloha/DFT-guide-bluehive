@@ -387,7 +387,7 @@ Gaussian 16 supports a wide range of computational methods:
 | **TD-DFT**                   | Excited state energies, gradients                                       |
 | **High-Accuracy Models**     | G1-G4, CBS, W1 series                                                   |
 
-> 🔹 `E`: Energy  
+> `E`: Energy  
 > `G`: Analytic Gradients  
 > `F`: Analytic Frequencies  
 > `F†`: Reimplemented with analytic frequencies
