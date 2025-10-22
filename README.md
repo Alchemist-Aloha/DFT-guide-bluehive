@@ -844,7 +844,7 @@ Use the script:
 
 - Parses `.log` file for Raman activities.
 - Generates **plots** with Lorentzian/Gaussian broadening.
-- Customizable HWHM (half-width at half-maximum), linewidth.
+- Customizable FWHM (Full-width at half-maximum), linewidth.
 
 > 🧩 Perfect for non-resonance and resonance Raman visualization.
 
@@ -865,10 +865,7 @@ Use the script:
   📎 [https://cccbdb.nist.gov/vsfx.asp](https://cccbdb.nist.gov/vsfx.asp)
 
 - **Resonance Raman Reference Paper:**  
-  *Coord. Chem. Rev.*, **2010**, *254*(21–22), 2505–2518. DOI: [10.1016/j.ccr.2010.05.013](https://doi.org/10.1016/j.ccr.2010.05.013)
-
-- **Gaussian Input Syntax Guide:**  
-  📎 [https://gaussian.com/input/](https://gaussian.com/input/)
+  *Coord. Chem. Rev.*, **2010**, *254*(21–22), 2505–2518. DOI: [10.1016/j.ccr.2009.11.015](https://doi.org/10.1016/j.ccr.2009.11.015)
 
 ---
 
@@ -889,6 +886,5 @@ Use the script:
 
 ---
 
-**End of Guide**  
-Prepared by: *Likun Cai*  
+**End of Guide**   
 Date: October 2025
