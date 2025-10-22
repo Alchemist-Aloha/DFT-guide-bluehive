@@ -10,41 +10,41 @@
 
 ## **Table of Contents**
 
-1. [Quantum Mechanical Background](#quantum-mechanical-background)  
-2. [The Hartree-Fock (HF) Method](#the-hartree-fock-hf-method)  
-3. [Density Functional Theory (DFT)](#density-functional-theory-dft)  
-   - Hohenberg-Kohn Theorems  
-   - Kohn-Sham Approach  
-   - Total Energy in DFT  
-4. [Jacob’s Ladder of DFT Approximations](#jacob’s-ladder-of-density-functional-approximations)  
-5. [Basis Sets](#basis-sets)  
-6. [Accessing Bluehive](#accessing-bluehive)  
-   - Logging In  
-   - Partitions: Standard vs Preempt  
-   - Storage Limits  
-7. [Running Jobs Using Slurm](#running-jobs-using-slurm)  
-   - Job Script Template  
-8. [Building Molecules with Avogadro](#building-molecules-with-avogadro)  
-9. [Gaussian 16 Capabilities](#gaussian-16-capabilities)  
-10. [Gaussian Input (.gjf) File Structure](#gaussian-input-gjf-file-structure)  
-    - Link 0 Commands  
-    - Route Section  
-    - Title and Molecule Specification  
-11. [Charge and Multiplicity](#charge-and-multiplicity)  
-12. [Gaussian Output (.log) File](#gaussian-output-log-file)  
-13. [Checkpoint (.chk) Files](#checkpoint-chk-files)  
-14. [Geometry Optimization](#geometry-optimization)  
-15. [Molecular Orbitals (MO)](#molecular-orbitals-mo)  
-16. [Time-Dependent DFT (TDDFT)](#time-dependent-dft-tddft)  
-17. [Frequency and Vibrational Analysis](#frequency-and-vibrational-analysis)  
-    - IR and Raman Intensities  
-    - Preresonance Raman  
-18. [Resonance Raman Spectroscopy](#resonance-raman-spectroscopy)  
-    - Vertical Gradient Method  
-    - Adiabatic Shift Method  
-19. [Post-Processing Tools](#post-processing-tools)  
-    - Converting .chk to .fchk  
-    - Extracting Raman Spectra  
+1. [Quantum Mechanical Background](#quantum-mechanical-background)
+2. [The Hartree-Fock (HF) Method](#the-hartree-fock-hf-method)
+3. [Density Functional Theory (DFT)](#density-functional-theory-dft)
+   - Hohenberg-Kohn Theorems
+   - Kohn-Sham Approach
+   - Total Energy in DFT
+4. [Jacob’s Ladder of DFT Approximations](#jacob’s-ladder-of-density-functional-approximations)
+5. [Basis Sets](#basis-sets)
+6. [Accessing Bluehive](#accessing-bluehive)
+   - Logging In
+   - Partitions: Standard vs Preempt
+   - Storage Limits
+7. [Running Jobs Using Slurm](#running-jobs-using-slurm)
+   - Job Script Template
+8. [Building Molecules with Avogadro](#building-molecules-with-avogadro)
+9. [Gaussian 16 Capabilities](#gaussian-16-capabilities)
+10. [Gaussian Input (.gjf) File Structure](#gaussian-input-gjf-file-structure)
+    - Link 0 Commands
+    - Route Section
+    - Title and Molecule Specification
+11. [Charge and Multiplicity](#charge-and-multiplicity)
+12. [Gaussian Output (.log) File](#gaussian-output-log-file)
+13. [Checkpoint (.chk) Files](#checkpoint-chk-files)
+14. [Geometry Optimization](#geometry-optimization)
+15. [Molecular Orbitals (MO)](#molecular-orbitals-mo)
+16. [Time-Dependent DFT (TDDFT)](#time-dependent-dft-tddft)
+17. [Frequency and Vibrational Analysis](#frequency-and-vibrational-analysis)
+    - IR and Raman Intensities
+    - Preresonance Raman
+18. [Resonance Raman Spectroscopy](#resonance-raman-spectroscopy)
+    - Vertical Gradient Method
+    - Adiabatic Shift Method
+19. [Post-Processing Tools](#post-processing-tools)
+    - Converting .chk to .fchk
+    - Extracting Raman Spectra
 20. [References and Resources](#references-and-resources)
 
 ---
@@ -52,10 +52,12 @@
 ## **1. Quantum Mechanical Background**
 
 ### **Mean Field Approximation**
+
 - Simplifies the N-electron problem into **N separate one-electron problems**.
 - Each electron moves in an average potential field created by all other electrons.
 
 ### **Electron Exchange Energy**
+
 - A quantum mechanical contribution to total energy due to the **indistinguishability** of electrons and the **Pauli exclusion principle**.
 - Requirement: the wavefunction must be **antisymmetric** under exchange of any two electrons.
 - Physical Intuition: Identical fermions cannot occupy the same quantum state → they "keep their distance", lowering system energy.
@@ -67,19 +69,23 @@
 ## **2. The Hartree-Fock (HF) Method**
 
 ### **Core Idea**
+
 - Models the many-electron wavefunction as a **single Slater determinant**.
 - Electrons occupy individual molecular orbitals.
 
 ### **Mean Field Treatment**
+
 - Each electron experiences a **static average electric field** (mean field) from the rest of the electrons.
 - No instantaneous Coulomb correlation included.
 
 ### **Strengths & Limitations**
+
 - ✅ Exact treatment of **electron exchange energy**.
 - ❌ Does **not include electron correlation**.
 - ❌ Computationally expensive for large systems.
 
 ### **Transformation**
+
 - Converts the N-electron Schrödinger-like problem into **N single-electron equations** (Fock equations).
 
 > ⚠️ HF gives a good description of exchange but misses correlation – key for accurate energetics in weakly interacting systems.
@@ -89,6 +95,7 @@
 ## **3. Density Functional Theory (DFT)**
 
 ### **Fundamental Idea**
+
 - Uses **electron density** (ρ(**r**)) instead of the full wavefunction.
 - Electron density is a function of only **three spatial coordinates (x, y, z)**, independent of the number of electrons.
 
@@ -98,10 +105,12 @@
 
 ### **Hohenberg-Kohn Theorems**
 
-**First Theorem:**  
+**First Theorem:**
+
 - The **ground-state electron density** uniquely determines **all properties** of a system, including its total energy.
 
-**Second Theorem:**  
+**Second Theorem:**
+
 - The true ground-state density is the one that **minimizes the energy functional**:
 
   $$
@@ -109,6 +118,7 @@
   $$
 
 Where:
+
 - $T[\rho]$: Kinetic energy functional
 - $V_{\text{ne}}[\rho]$: Nucleus-electron attraction
 - $J[\rho]$: Classical Coulomb (electron-electron repulsion)
@@ -122,14 +132,17 @@ Where:
 - Solves effective single-particle Schrödinger-like equations.
 
 **Equation:**
+
 $$
 \left[ -\frac{1}{2} \nabla^2 + v_{\text{eff}}(\mathbf{r}) \right] \psi_i(\mathbf{r}) = \epsilon_i \psi_i(\mathbf{r})
 $$
 
 Where:
+
 - $v_{\text{eff}}(\mathbf{r}) = v_{\text{ext}}(\mathbf{r}) + \int \frac{\rho(\mathbf{r'})}{|\mathbf{r}-\mathbf{r'}|} d\mathbf{r'} + v_{\text{xc}}(\mathbf{r})$
 
-**Key Challenge:**  
+**Key Challenge:**
+
 - Exchange-correlation ($E_{\text{xc}}$) term is **unknown**, and **approximations are essential** for accurate results.
 
 ---
@@ -138,12 +151,12 @@ Where:
 
 The total energy of the system is computed as:
 
-| Term | Description |
-|------|-------------|
-| **KS Kinetic Energy** | Kinetic energy of non-interacting electrons |
-| **External Nuclei-Electron Potential** | Attraction between electrons and nuclei |
-| **Electron Coulomb Energy** | Classical electrostatic repulsion (Hartree term) |
-| **Exchange–Correlation Energy** | Non-classical quantum effects: exchange + correlation |
+| Term                                   | Description                                           |
+| -------------------------------------- | ----------------------------------------------------- |
+| **KS Kinetic Energy**                  | Kinetic energy of non-interacting electrons           |
+| **External Nuclei-Electron Potential** | Attraction between electrons and nuclei               |
+| **Electron Coulomb Energy**            | Classical electrostatic repulsion (Hartree term)      |
+| **Exchange–Correlation Energy**        | Non-classical quantum effects: exchange + correlation |
 
 > 🛠 **Goal of DFT methods**: Accurately model $E_{\text{xc}}$ through functional approximations.
 
@@ -153,13 +166,13 @@ The total energy of the system is computed as:
 
 Hierarchy of increasingly accurate (but more expensive) approximations for $E_{\text{xc}}$:
 
-| Level | Description | Examples |
-|-------|-------------|--------|
-| **LDA**<br>Local Density Approximation | Assumes uniform electron gas at each point; depends only on density $\rho(\mathbf{r})$ | S,VWN |
-| **GGA**<br>Generalized Gradient Approximation | Includes gradient of density $\nabla\rho(\mathbf{r})$, better for non-uniform systems | PBE, BLYP |
-| **meta-GGA** | Adds dependence on kinetic energy density or second derivative of $\rho$ | TPSS, M06L |
-| **Hybrid** | Mixes DFT with a portion (e.g., 20%) of **exact HF exchange** | B3LYP, PBE0 |
-| **Range-Separated Hybrid (RSH)** | Separates exchange interaction by distance via parameter **ω**:<br>– Short-range: DFT exchange<br>– Long-range: HF exchange | CAM-B3LYP, ωB97XD |
+| Level                                         | Description                                                                                                                 | Examples          |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| **LDA**<br>Local Density Approximation        | Assumes uniform electron gas at each point; depends only on density $\rho(\mathbf{r})$                                      | S,VWN             |
+| **GGA**<br>Generalized Gradient Approximation | Includes gradient of density $\nabla\rho(\mathbf{r})$, better for non-uniform systems                                       | PBE, BLYP         |
+| **meta-GGA**                                  | Adds dependence on kinetic energy density or second derivative of $\rho$                                                    | TPSS, M06L        |
+| **Hybrid**                                    | Mixes DFT with a portion (e.g., 20%) of **exact HF exchange**                                                               | B3LYP, PBE0       |
+| **Range-Separated Hybrid (RSH)**              | Separates exchange interaction by distance via parameter **ω**:<br>– Short-range: DFT exchange<br>– Long-range: HF exchange | CAM-B3LYP, ωB97XD |
 
 > 🔬 **Range**: Refers to spatial separation between electrons. Non-Coulomb parts of exchange functionals decay too rapidly at **large distances** → RSH fixes this.
 
@@ -172,33 +185,36 @@ Used to represent the **Kohn-Sham orbitals** as linear combinations of atomic or
 ### **Types of Basis Sets**
 
 #### **Zeta Levels**
+
 - Number of functions per valence atomic orbital.
 
-| Type | Description | Example Basis Sets |
-|------|-----------|--------------------|
-| **Double-Zeta (DZ)** | Two basis functions for each valence orbital | 6-31G, cc-pVDZ, def2-SVP |
-| **Triple-Zeta (TZ)** | Three basis functions for better accuracy | 6-311G, cc-pVTZ, def2-TZVP |
+| Type                 | Description                                  | Example Basis Sets         |
+| -------------------- | -------------------------------------------- | -------------------------- |
+| **Double-Zeta (DZ)** | Two basis functions for each valence orbital | 6-31G, cc-pVDZ, def2-SVP   |
+| **Triple-Zeta (TZ)** | Three basis functions for better accuracy    | 6-311G, cc-pVTZ, def2-TZVP |
 
 #### **Polarized Basis Sets**
+
 - Add **higher angular momentum functions** (d, f, p) to allow orbital distortion during bonding.
 
-| Family | Convention | Example |
-|-------|------------|--------|
-| Pople (e.g., 6-31G) | Add `*` for polarization on heavy atoms | 6-31G*, 6-311G** |
-| Dunning (cc-pVxZ) | Automatically includes polarization | cc-pVDZ, cc-pVTZ |
-| Ahlrichs (def2) | Already polarized in standard versions | def2-TZVP |
+| Family              | Convention                              | Example             |
+| ------------------- | --------------------------------------- | ------------------- |
+| Pople (e.g., 6-31G) | Add `*` for polarization on heavy atoms | 6-31G\*, 6-311G\*\* |
+| Dunning (cc-pVxZ)   | Automatically includes polarization     | cc-pVDZ, cc-pVTZ    |
+| Ahlrichs (def2)     | Already polarized in standard versions  | def2-TZVP           |
 
 > 💡 Tip: Use **polarized basis sets** for accurate geometries and energy differences.
 
 #### **Diffuse Functions**
+
 - Include very low-exponent Gaussians to describe **electrons far from nucleus**.
 - Important for anions, excited states, non-covalent interactions.
 
-| Family | Convention | Example |
-|-------|------------|--------|
-| Pople | `+` adds diffuse function | 6-31+G, 6-311++G |
-| Dunning | `aug-` adds diffuse functions | aug-cc-pVDZ |
-| def2 | Manually use **def2-TZVPD** | Import from [Basis Set Exchange](https://www.basissetexchange.org/) |
+| Family  | Convention                    | Example                                                             |
+| ------- | ----------------------------- | ------------------------------------------------------------------- |
+| Pople   | `+` adds diffuse function     | 6-31+G, 6-311++G                                                    |
+| Dunning | `aug-` adds diffuse functions | aug-cc-pVDZ                                                         |
+| def2    | Manually use **def2-TZVPD**   | Import from [Basis Set Exchange](https://www.basissetexchange.org/) |
 
 > 🛑 Never perform anion calculations without **diffuse functions**.
 
@@ -207,6 +223,7 @@ Used to represent the **Kohn-Sham orbitals** as linear combinations of atomic or
 ## **6. Accessing Bluehive**
 
 ### **Prerequisites**
+
 - You need a **UR account (URAD credentials)**.
 - Request Bluehive access via:  
   📎 [https://info.circ.rochester.edu/](https://info.circ.rochester.edu/#BlueHive)
@@ -216,6 +233,7 @@ Used to represent the **Kohn-Sham orbitals** as linear combinations of atomic or
 ### **Logging In via SSH**
 
 From Unix/Linux/Mac terminal:
+
 ```bash
 ssh YourURADUsername@bluehive.circ.rochester.edu
 ```
@@ -228,10 +246,10 @@ You will be prompted for your password.
 
 ### **Compute Partitions: Standard vs Preempt**
 
-| Partition | Max Walltime | Resources | Job Limits | Notes |
-|---------|-------------|----------|------------|------|
-| **standard** | 5 days (5-00:00:00) | CPU=120, Mem=3100G | 2000 running/submitted | Longer time limit, but longer wait time |
-| **preempt** | 2 days (2-00:00:00) | CPU=120 (no mem limit stated) | 2000 (same) | Jobs may be **preempted and restarted** (dangerous for Gaussian!) |
+| Partition    | Max Walltime        | Resources                     | Job Limits             | Notes                                                             |
+| ------------ | ------------------- | ----------------------------- | ---------------------- | ----------------------------------------------------------------- |
+| **standard** | 5 days (5-00:00:00) | CPU=120, Mem=3100G            | 2000 running/submitted | Longer time limit, but longer wait time                           |
+| **preempt**  | 2 days (2-00:00:00) | CPU=120 (no mem limit stated) | 2000 (same)            | Jobs may be **preempted and restarted** (dangerous for Gaussian!) |
 
 - You can use both partitions together.
 - **Recommended Allocations:**
@@ -244,20 +262,22 @@ You will be prompted for your password.
 
 ### **Storage Limits (as of Oct 2025)**
 
-| Directory | Limit | Grace Period | Write Block |
-|---------|-------|---------------|------------|
-| `/home/username` | 20 GB | N/A | Immediate at 20 GB |
+| Directory           | Limit  | Grace Period           | Write Block                                    |
+| ------------------- | ------ | ---------------------- | ---------------------------------------------- |
+| `/home/username`    | 20 GB  | N/A                    | Immediate at 20 GB                             |
 | `/scratch/username` | 200 GB | 7 days after exceeding | **Blocked at 1000 GB** – immediate job failure |
 
 > ⚠️ **Exceeding 1000 GB on /scratch kills all running jobs instantly.**
 
 #### **How to Check Usage**
+
 ```bash
 quota                            # Shows storage quotas
 du -h -s ~/scratch               # Check actual usage
 ```
 
 #### **Tips for Managing Storage**
+
 - Remove old `.RWF`, `.chk`, `.log` files from **failed jobs**.
 - Download important results to **lab server or local machine**.
 - Clear space regularly to avoid disruptions.
@@ -274,6 +294,7 @@ du -h -s ~/scratch               # Check actual usage
 Save as `run.sh`. Modify highlighted lines.
 
 #### ✅ **Standard Partition Script**
+
 ```bash
 #!/bin/bash
 #SBATCH -p standard
@@ -293,6 +314,7 @@ g16 your_gaussian_input.gjf
 ```
 
 #### 🔁 **Preempt Partition Script**
+
 ```bash
 #!/bin/bash
 #SBATCH -p preempt
@@ -312,21 +334,23 @@ g16 your_gaussian_input.gjf
 
 ### **Explanation of Key Directives**
 
-| Directive | Purpose |
-|---------|--------|
-| `#SBATCH -J job_name` | Name of your job |
-| `#SBATCH -o output.out` | Output .out file |
-| `#SBATCH --error=error.err` | Output .err file |
-| `--mail-type=all` | Email notifications (start, end, fail) |
-| `--cpus-per-task=N` | Number of CPU cores to use |
-| `--mem-per-cpu=XXXXMb` | Memory per core |
-| `-t D-HH:MM:SS` | Walltime limit |
-| `--no-requeue` | Prevent resubmission if preempted (important!) |
+| Directive                   | Purpose                                        |
+| --------------------------- | ---------------------------------------------- |
+| `#SBATCH -J job_name`       | Name of your job                               |
+| `#SBATCH -o output.out`     | Output .out file                               |
+| `#SBATCH --error=error.err` | Output .err file                               |
+| `--mail-type=all`           | Email notifications (start, end, fail)         |
+| `--cpus-per-task=N`         | Number of CPU cores to use                     |
+| `--mem-per-cpu=XXXXMb`      | Memory per core                                |
+| `-t D-HH:MM:SS`             | Walltime limit                                 |
+| `--no-requeue`              | Prevent resubmission if preempted (important!) |
 
 > ✅ Always include `--no-requeue` with Gaussian jobs — **restarting mid-calculation may be unsafe**.
 
 ### **Submit the Job**
+
 Place `run.sh` and `your_gaussian_input.gjf` in the same directory, then:
+
 ```bash
 sbatch run.sh
 ```
@@ -338,6 +362,7 @@ sbatch run.sh
 ## **8. Building Molecules with Avogadro**
 
 ### **Step-by-Step**
+
 1. Open **Avogadro**.
 2. Draw your molecule.
 3. Use **Extensions → Auto-Optimize** to refine geometry with force fields (e.g., UFF).
@@ -353,15 +378,15 @@ sbatch run.sh
 
 Gaussian 16 supports a wide range of computational methods:
 
-| Method Type | Supported Methods |
-|------------|-------------------|
-| **Molecular Mechanics** | Amber, UFF, Dreiding |
-| **Semi-Empirical** | AM1, PM6, PM7, DFTB |
-| **Hartree-Fock (HF)** | Standard, including gradients (`G`) and frequencies (`F`) |
+| Method Type                  | Supported Methods                                                       |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| **Molecular Mechanics**      | Amber, UFF, Dreiding                                                    |
+| **Semi-Empirical**           | AM1, PM6, PM7, DFTB                                                     |
+| **Hartree-Fock (HF)**        | Standard, including gradients (`G`) and frequencies (`F`)               |
 | **Density Functional (DFT)** | All common functionals; long-range corrections; dispersion (e.g., D3BJ) |
-| **Post-HF Methods** | MP2, MP4, CCSD, CCSD(T), CASSCF, EOM-CCSD (excited states) |
-| **TD-DFT** | Excited state energies, gradients |
-| **High-Accuracy Models** | G1-G4, CBS, W1 series |
+| **Post-HF Methods**          | MP2, MP4, CCSD, CCSD(T), CASSCF, EOM-CCSD (excited states)              |
+| **TD-DFT**                   | Excited state energies, gradients                                       |
+| **High-Accuracy Models**     | G1-G4, CBS, W1 series                                                   |
 
 > 🔹 `E`: Energy  
 > `G`: Analytic Gradients  
@@ -373,6 +398,7 @@ Gaussian 16 supports a wide range of computational methods:
 ## **10. Gaussian Input (.gjf) File Structure**
 
 Example:
+
 ```gjf
 %Chk=h2o.chk
 %nprocshared=48
@@ -391,27 +417,30 @@ H   0.441  -0.143   0.0
 ### **Sections Explained**
 
 #### **Link 0 Commands (Start with %)**
-| Command | Meaning |
-|--------|--------|
-| `%Chk=file.chk` | Name of checkpoint file |
+
+| Command            | Meaning                                              |
+| ------------------ | ---------------------------------------------------- |
+| `%Chk=file.chk`    | Name of checkpoint file                              |
 | `%OldChk=file.chk` | Read geometry/wavefunction from previous calculation |
-| `%NProcShared=N` | Number of CPU cores to use |
-| `%Mem=sizeGB` | Total memory allocation (e.g., 160GB) |
+| `%NProcShared=N`   | Number of CPU cores to use                           |
+| `%Mem=sizeGB`      | Total memory allocation (e.g., 160GB)                |
 
 > 🔗 These must be first in the file.
 
 ---
 
 #### **Route Section (`#`)**
+
 Specifies the method, basis set, and job type.
 
 Example:
+
 ```
 #p B3LYP/6-31G(d) Opt Pop=Regular
 ```
 
 - **`B3LYP`**: Functional
-- **`/6-31G(d)`**: Basis set (equal to 6-31G*)
+- **`/6-31G(d)`**: Basis set (equal to 6-31G\*)
 - **`Opt`**: Geometry optimization
 - **`Pop=Regular`**: Compute and print molecular orbitals
 - **`p`**: Prints more output (useful for debugging)
@@ -421,12 +450,14 @@ Example:
 ---
 
 #### **Title Section**
+
 - One line describing the job.
 - Can be anything (e.g., "Water Optimization").
 
 ---
 
 #### **Molecule Specification**
+
 - Charge and multiplicity on first line.
 - Atom list: Element, x, y, z (in angstroms).
 - Must end with a **blank line**.
@@ -437,25 +468,25 @@ Example:
 
 ## **11. Charge and Multiplicity**
 
-| Multiplicity | Formula | Examples |
-|------------|--------|--------|
-| **Singlet (S₀)** | 2S + 1 = 1 → S = 0 → 0 unpaired e⁻ | Closed shell neutral molecule |
-| **Triplet (T₁)** | 2S + 1 = 3 → S = 1 → 2 unpaired e⁻ | O₂, excited states |
-| **Doublet** | 2S + 1 = 2 → S = 0.5 → 1 unpaired e⁻ | Radicals, cations with odd e⁻ count |
+| Multiplicity     | Formula                              | Examples                            |
+| ---------------- | ------------------------------------ | ----------------------------------- |
+| **Singlet (S₀)** | 2S + 1 = 1 → S = 0 → 0 unpaired e⁻   | Closed shell neutral molecule       |
+| **Triplet (T₁)** | 2S + 1 = 3 → S = 1 → 2 unpaired e⁻   | O₂, excited states                  |
+| **Doublet**      | 2S + 1 = 2 → S = 0.5 → 1 unpaired e⁻ | Radicals, cations with odd e⁻ count |
 
 ### **Common Cases**
 
-| Species | Charge | Multiplicity |
-|--------|--------|--------------|
-| Neutral closed-shell | 0 | 1 |
-| Neutral radical | 0 | 2 |
-| Triplet state | 0 | 3 |
-| Anion (M⁻) | -1 | 2 |
-| Dianion (M²⁻) | -2 | 1 or 3 |
-| Cation (M⁺) | +1 | 2 |
-| Dication (M²⁺) | +2 | 1 or 3 |
+| Species              | Charge | Multiplicity |
+| -------------------- | ------ | ------------ |
+| Neutral closed-shell | 0      | 1            |
+| Neutral radical      | 0      | 2            |
+| Triplet state        | 0      | 3            |
+| Anion (M⁻)           | -1     | 2            |
+| Dianion (M²⁻)        | -2     | 1 or 3       |
+| Cation (M⁺)          | +1     | 2            |
+| Dication (M²⁺)       | +2     | 1 or 3       |
 
-> ⚠️ For **anions**, **always use a basis set with diffuse functions** (e.g., 6-31+G*, aug-cc-pVDZ)
+> ⚠️ For **anions**, **always use a basis set with diffuse functions** (e.g., 6-31+G\*, aug-cc-pVDZ)
 
 ---
 
@@ -465,6 +496,7 @@ Example:
 - Contains **all results**: energies, coordinates, frequencies, orbitals, transitions.
 
 ### **Sign of Successful Completion**
+
 ```log
 Normal termination of Gaussian 16 at Wed Nov  1 16:26:50 2023.
 ```
@@ -472,6 +504,7 @@ Normal termination of Gaussian 16 at Wed Nov  1 16:26:50 2023.
 > ❌ If this does **not appear**, the job failed or is still running.
 
 ### **Visualization**
+
 - Load `.log` or checkpoint file into **Avogadro**, **GaussView**, or **ChemCraft** to visualize:
   - Optimized geometry
   - Vibrational modes
@@ -483,20 +516,25 @@ Normal termination of Gaussian 16 at Wed Nov  1 16:26:50 2023.
 ## **13. Checkpoint (.chk) Files**
 
 ### **Purpose**
+
 - Binary file containing **wavefunction, orbitals, density, geometry**, etc.
 - Enables restarts and advanced analysis.
 
 ### **Uses**
+
 - Initial guess for subsequent calculations (via `geom=check guess=read`)
 - TDDFT, frequency, population analysis
 - Visualization of **molecular orbitals** (requires `.chk` or `.fchk`)
 
 ### **Platform Compatibility**
+
 - `.chk` files are **binary and Linux-compatible only**.
 - For Windows/Mac: convert to **formatted checkpoint (.fchk)**.
+
 ### **Convert .chk to .fchk**
 
 #### On Bluehive (Terminal)
+
 ```bash
 export GAUSS_MEMDEF=2000MW
 module load gaussian/16-c01/avx2
@@ -506,6 +544,7 @@ formchk -3 input.chk output.fchk
 > ✅ `-3`: Creates double-precision `.fchk`
 
 #### Using Slurm (Recommended for Large Files)
+
 Save as `job.sh`:
 
 ```bash
@@ -535,10 +574,13 @@ Submit: `sbatch job.sh`
 Optimize molecular structure to minimize total energy.
 
 ### **Route Section Keyword**
+
 ```
 Opt
 ```
+
 ### **Example Input**
+
 ```gjf
 %Chk=h2o.chk
 %nprocshared=48
@@ -555,6 +597,7 @@ H   0.441  -0.143   0.0
 ```
 
 ### **Starting from a Previous .chk File**
+
 Useful to continue optimization or change method.
 
 ```gjf
@@ -573,14 +616,17 @@ Restarted Optimization
 > ✅ `guess=read`: read wavefunction for faster convergence
 
 ### **Solvent Effects**
+
 PCM performs a reaction field calculation using the integral equation formalism model (IEFPCM). To include solvent effects using PCM model:
+
 ```
 #p opt b3lyp/def2SVP SCRF=(Solvent=Ethanol) geom=check guess=read
 ```
+
 Available solvents can be found in [https://gaussian.com/scrf/](https://gaussian.com/scrf/)
 
-
 ### **Convergence Criteria**
+
 Successful optimization includes:
 
 ```log
@@ -600,16 +646,19 @@ All lines should say **YES**.
 To analyze and visualize orbitals:
 
 Add to route section:
+
 ```
 pop=regular
 ```
 
 or for more detail:
+
 ```
 pop=(regular,mocoeffs)
 ```
 
 ### **Steps**
+
 1. Run calculation with `pop=regular`
 2. Generate `.fchk` from `.chk` (see below)
 3. Open in **Avogadro** → Extensions → Surfaces → Show MOs
@@ -623,13 +672,16 @@ pop=(regular,mocoeffs)
 Calculates **excited state energies** and properties.
 
 ### **Route Section**
+
 ```
 td=(nstates=N,root=M)
 ```
+
 - `N`: Number of excited states to compute
 - `M`: State for energy/gradient (e.g., S₁ = root=1)
 
 ### **Example**
+
 ```gjf
 %OldChk=benzyl_d0.chk
 %NProcShared=10
@@ -647,6 +699,7 @@ Benzyl radical doublet: gradient calculation on third excited state at ground st
 ---
 
 ### **Sample Output**
+
 ```log
 Excited State   1:      Singlet-A      1.9615 eV  632.07 nm  f=0.8381  <S**2>=0.000
     478 -> 481       -0.12828
@@ -668,6 +721,7 @@ Total Energy, E(TD-HF/TD-DFT) =  -8409.97137589
 ## **17. Frequency and Vibrational Analysis**
 
 Computes:
+
 - Harmonic vibrational frequencies
 - IR/Raman intensities
 - Zero-point energy (ZPE)
@@ -676,6 +730,7 @@ Computes:
 ---
 
 ### **A. Frequencies and IR Intensity**
+
 ```gjf
 %OldChk=opt.chk
 %NProcShared=48
@@ -693,6 +748,7 @@ Frequencies and IR intensity
 ---
 
 ### **B. Preresonance Raman**
+
 Resonant enhancement without actual resonance (excitation near but not at absorption peak).
 
 ```gjf
@@ -710,6 +766,7 @@ Preresonance Raman intensity
 ### **C. Frequency Convergence Issues**
 
 If frequency job fails to converge, add:
+
 ```
 Int=Acc2E=13 CPHF(MaxInv=10000)
 ```
@@ -726,9 +783,9 @@ Computed harmonic frequencies are typically **overestimated**. Apply scaling fac
 📎 [https://cccbdb.nist.gov/vsfx.asp](https://cccbdb.nist.gov/vsfx.asp)
 
 | Functional/Basis | Scaling Factor |
-|------------------|----------------|
-| B3LYP/6-31G(d)   | 0.9603          |
-| wB97XD/TZVP      | 0.9550          |
+| ---------------- | -------------- |
+| B3LYP/6-31G(d)   | 0.9603         |
+| wB97XD/TZVP      | 0.9550         |
 
 Multiply all frequencies by the appropriate factor.
 
@@ -745,6 +802,7 @@ Two proper methods:
 ### **Method 1: Vertical Gradient (VG)**
 
 1. **Ground State Frequency** (Hessian at GS geometry)
+
 ```gjf
 %OldChk=gsopt.chk
 %NProcShared=48
@@ -758,6 +816,7 @@ Simple
 ```
 
 2. **Vertical Gradient Calculation** (Force at GS geometry on excited state)
+
 ```gjf
 %OldChk=gsfreq.chk
 %NProcShared=48
@@ -771,6 +830,7 @@ S1 Optimization
 ```
 
 3. **Resonance Raman with Vertical Gradient**
+
 ```gjf
 %OldChk=gsfreq.chk
 %NProcShared=48
@@ -799,6 +859,7 @@ s1force.chk
 1. **Ground State Frequency** (same as above)
 
 2. **Excited State Geometry Optimization**
+
 ```gjf
 %OldChk=gsfreq.chk
 %NProcShared=48
@@ -812,6 +873,7 @@ S1 Optimization
 ```
 
 3. **Resonance Raman with Adiabatic Shift**
+
 ```gjf
 %OldChk=gsfreq.chk
 %NProcShared=48
@@ -831,12 +893,11 @@ Spectrum=(Broadening=Lorentzian,HWHM=10.0)
 s1opt.chk
 ```
 
-📘 Source: *Coordination Chemistry Reviews*, Volume 254, Issues 21–22, November 2010, Pages 2505–2518
+📘 Source: _Coordination Chemistry Reviews_, Volume 254, Issues 21–22, November 2010, Pages 2505–2518
 
 ---
 
 ## **19. Post-Processing Tools**
-
 
 ### **Extract Raman Spectra**
 
@@ -866,20 +927,22 @@ Use the script:
   📎 [https://cccbdb.nist.gov/vsfx.asp](https://cccbdb.nist.gov/vsfx.asp)
 
 - **Resonance Raman Reference Paper:**  
-  *Coord. Chem. Rev.*, **2010**, *254*(21–22), 2505–2518. DOI: [10.1016/j.ccr.2009.11.015](https://doi.org/10.1016/j.ccr.2009.11.015)
+  _Coord. Chem. Rev._, **2010**, _254_(21–22), 2505–2518. DOI: [10.1016/j.ccr.2009.11.015](https://doi.org/10.1016/j.ccr.2009.11.015)
 
 ---
 
 ## **Final Tips**
 
 ✅ Always:
-- Use `--no-requeue` for Gaussian jobs  
-- Monitor storage usage with `quota`  
-- Scale frequencies appropriately  
-- Use diffuse functions for anions/excited states  
-- Convert `.chk` to `.fchk` for visualization  
+
+- Use `--no-requeue` for Gaussian jobs
+- Monitor storage usage with `quota`
+- Scale frequencies appropriately
+- Use diffuse functions for anions/excited states
+- Convert `.chk` to `.fchk` for visualization
 
 🧠 Think carefully about:
+
 - Functional choice (use RSH for charge transfer)
 - Basis set completeness
 - Excited state convergence
@@ -887,5 +950,5 @@ Use the script:
 
 ---
 
-**End of Guide**   
+**End of Guide**  
 Date: October 2025
